@@ -1,17 +1,73 @@
-# Stage206: Spec-Consistent Minimal Demo (Fail-Closed)
+# Stage207: Crypto Integration Minimal (PQC + HKDF + AES-GCM, fail-closed)
 
-MIT License © 2025 Motohiro Suzuki
+This stage integrates minimal cryptographic components into the QSP prototype.
 
-## Purpose
-Stage206 proves:
+The goal is not to claim production security but to demonstrate a **minimal,
+fail-closed cryptographic integration pipeline**.
 
-- It follows protocol_v1.0.md (Stage205 frozen spec)
-- State machine matches allowed transitions
-- Wire format is validated
-- Fail-closed actually happens
+## Architecture
 
-## Run demo
-python -m scripts.run_demo
+PQC (stub)
++
+QKD key
+↓
+HKDF-SHA256
+↓
+AES-256-GCM
+↓
+Authenticated encryption
 
-## Run tests
-pytest -q
+If any required security input is missing, the system **fails closed**.
+
+## Components
+
+### qspcrypto
+
+Minimal cryptographic integration layer.
+
+Modules:
+
+- `pqc_stub.py` – PQC KEM interface stub for integration testing
+- `hkdf.py` – HKDF-SHA256 key derivation
+- `aead.py` – AES-256-GCM authenticated encryption
+- `session.py` – integration layer deriving AEAD keys
+- `errors.py` – fail-closed exception definitions
+
+### qsp_demo
+
+Minimal protocol demonstration inherited from **Stage206**.
+
+### tests
+
+Security and functionality tests.
+
+- `test_fail_closed.py` – verifies fail-closed behaviour
+- `test_roundtrip.py` – AES-GCM encryption/decryption
+
+## Run Tests
+
+```bash
+pip install -e .
+pytest
+
+Expected result
+
+4 passed
+Design Principle
+
+This stage demonstrates:
+
+minimal cryptographic wiring
+
+explicit security preconditions
+
+fail-closed behaviour
+
+reproducible tests
+
+The design goal is clarity of security boundaries rather than completeness.
+
+License
+
+MIT License
+© 2025 Motohiro Suzuki
