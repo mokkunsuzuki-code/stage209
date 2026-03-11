@@ -1,71 +1,105 @@
-# Stage207: Crypto Integration Minimal (PQC + HKDF + AES-GCM, fail-closed)
+QSP Stage209 — Security Claim Matrix
 
-This stage integrates minimal cryptographic components into the QSP prototype.
+QSP (Quantum Security Protocol) is a research-oriented project exploring the integration of modern cryptographic primitives and quantum-derived entropy sources within a transparent and verifiable session protocol architecture.
 
-The goal is not to claim production security but to demonstrate a **minimal,
-fail-closed cryptographic integration pipeline**.
+Stage209 introduces an explicit Security Claim Matrix, which links protocol assumptions to the security guarantees provided by the system.
 
-## Architecture
+This stage improves the transparency of the protocol's security reasoning by making the relationship between assumptions and guarantees explicit.
 
-PQC (stub)
-+
-QKD key
-↓
-HKDF-SHA256
-↓
-AES-256-GCM
-↓
-Authenticated encryption
+Purpose of Stage209
 
-If any required security input is missing, the system **fails closed**.
+In cryptographic protocol analysis, it is critical to clearly define:
 
-## Components
+which assumptions the protocol relies on
 
-### qspcrypto
+which security guarantees follow from those assumptions
 
-Minimal cryptographic integration layer.
+Stage209 introduces a structured mapping:
 
-Modules:
+Assumption → Guarantee
 
-- `pqc_stub.py` – PQC KEM interface stub for integration testing
-- `hkdf.py` – HKDF-SHA256 key derivation
-- `aead.py` – AES-256-GCM authenticated encryption
-- `session.py` – integration layer deriving AEAD keys
-- `errors.py` – fail-closed exception definitions
+This structure allows reviewers and researchers to understand how the protocol's security properties depend on specific cryptographic assumptions.
 
-### qsp_demo
+Security Claim Matrix
 
-Minimal protocol demonstration inherited from **Stage206**.
+The Security Claim Matrix connects protocol assumptions with their corresponding guarantees.
 
-### tests
+Assumption	Description	Guarantees
+A1	PQC shared secret unpredictability	Confidentiality
+A2	HKDF pseudorandomness	Secure key derivation
+A3	AES-GCM authenticated encryption	Message integrity and authenticity
+A4	QKD entropy (optional)	Additional entropy source
+A5	Fail-closed session enforcement	Safe protocol termination
 
-Security and functionality tests.
+The matrix makes the protocol’s trust boundaries explicit and prevents implicit or ambiguous security claims.
 
-- `test_fail_closed.py` – verifies fail-closed behaviour
-- `test_roundtrip.py` – AES-GCM encryption/decryption
+Project Evolution
 
-## Run Tests
+Stage209 continues the architectural progression of the QSP protocol design.
 
-```bash
-pip install -e .
-pytest
+Stage	Focus
+Stage206	Protocol design
+Stage207	Cryptographic integration
+Stage208	Security model
+Stage209	Security claim matrix
 
-Expected result
+This progression gradually builds a clearer structure for protocol reasoning and security analysis.
 
-4 passed
-Design Principle
+Repository Structure
+stage209
+│
+├ README.md
+├ protocol_v1.0.md
+│
+├ docs
+│   ├ security_assumptions.md
+│   ├ threat_model.md
+│   ├ guarantees.md
+│   └ security_claims.md
+│
+├ qspcrypto
+├ qsp_demo
+├ scripts
+└ tests
+Documentation
 
-This stage demonstrates:
+The security documentation in this repository is organized as follows.
 
-minimal cryptographic wiring
+security_assumptions.md
+Defines the assumptions required for protocol security.
 
-explicit security preconditions
+threat_model.md
+Describes the attacker capabilities considered in the design.
 
-fail-closed behaviour
+guarantees.md
+Specifies the security guarantees provided by the protocol.
 
-reproducible tests
+security_claims.md
+Links assumptions to guarantees through the Security Claim Matrix.
 
-The design goal is clarity of security boundaries rather than completeness.
+Design Philosophy
+
+The core idea of QSP is to separate:
+
+Assumptions
+Security properties
+Protocol guarantees
+
+This separation helps make the protocol's reasoning transparent and easier to review.
+
+Rather than relying on implicit trust in cryptographic primitives, the protocol explicitly documents how each assumption contributes to the overall security guarantees.
+
+Research Context
+
+This repository is part of an ongoing exploration of protocol architectures that combine:
+
+Post-Quantum Cryptography (PQC)
+
+classical cryptographic primitives
+
+optional quantum-derived entropy sources (QKD)
+
+The aim is to study how these elements can be integrated into a session protocol while keeping the security reasoning explicit and reviewable.
 
 License
 
